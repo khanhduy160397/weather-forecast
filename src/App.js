@@ -21,40 +21,38 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [isDay, setIsDay] = useState(true);
   // Call api to get value
-  useEffect(() => {
-      async function getWeather() {
-      const response = await axios.get(
-        "https://api.weatherapi.com/v1/current.json?key=2b5ae3f80e774339b5461932212204&q=Ho Chi Minh&aqi=yes"
-      );
-      console.log(response.data);
-      const data_current = response.data.current;
-      const data_location = response.data.location;
-      setCels(data_current.temp_c);
-      setHumid(data_current.humidity);
-      setWind(data_current.wind_mph);
-      setDate(data_current.last_updated);
-      setLocalTime(data_location.localtime);
-      setLocaltion(data_location.name);
-      if(data_current.is_day !== 1) {
-        setIsDay(false);
-      }
-
-      if(isDay) {
-        if (data_current.condition.text.includes("rain")) {
-          setWeather(rain);
-        } else if (data_current.condition.text.includes("cloud")) {
-          setWeather(cloud);
-        } else {
-          setWeather(sunny);
-        }
-      } else {
-        setWeather(night);
-      }
-      console.log(isDay);
-      setLoading(false);
+  useEffect(async () => {
+      
+    const response = await axios.get(
+      "https://api.weatherapi.com/v1/current.json?key=2b5ae3f80e774339b5461932212204&q=Ho Chi Minh&aqi=yes"
+    );
+    console.log(response.data);
+    const data_current = response.data.current;
+    const data_location = response.data.location;
+    setCels(data_current.temp_c);
+    setHumid(data_current.humidity);
+    setWind(data_current.wind_mph);
+    setDate(data_current.last_updated);
+    setLocalTime(data_location.localtime);
+    setLocaltion(data_location.name);
+    if(data_current.is_day !== 1) {
+      setIsDay(false);
     }
-    getWeather();
-  }, [isDay, weather]);
+
+    if(isDay) {
+      if (data_current.condition.text.includes("rain")) {
+        setWeather(rain);
+      } else if (data_current.condition.text.includes("cloud")) {
+        setWeather(cloud);
+      } else {
+        setWeather(sunny);
+      }
+    } else {
+      setWeather(night);
+    }
+    
+    setLoading(false);
+  }, [loading]);
 
   if (loading) {
     return <>
