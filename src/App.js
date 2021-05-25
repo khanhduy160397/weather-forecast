@@ -2,13 +2,17 @@ import { useEffect, useState } from "react";
 import "../src/App.css";
 import humidity from "./assets/humidity.png";
 import sunny from "./assets/sunny.gif";
-import temp from "./assets/thermometer-temperature-svgrepo-com.svg";
-import uvIndex from "./assets/uv.jpg";
-import wID from "./assets/clould.png";
+import temp from "./assets/cels.png";
+import uvIndex from "./assets/uv.png";
+import wID from "./assets/wind.png";
 import rain from "./assets/rainny.gif";
 import cloud from "./assets/cloudy.gif";
 import night from "./assets/night.gif"
 import axios from "../node_modules/axios"
+import night_sky from "./assets/dark-sky.jpg"
+import moon from "./assets/moon.png";
+import sunny_sky from "./assets/sunny.png"
+import sky_sun from "./assets/sunny_sky.jpg"
 
 function App() {
   const [date, setDate] = useState("");
@@ -20,6 +24,9 @@ function App() {
   const [weather, setWeather] = useState(sunny);
   const [loading, setLoading] = useState(true);
   const [isDay, setIsDay] = useState(true);
+  const [background_weather, setBgWeather] = useState("");
+  let params = "";
+
   // Call api to get value
   useEffect(async () => {
       
@@ -40,105 +47,106 @@ function App() {
     }
 
     if(isDay) {
+      
       if (data_current.condition.text.includes("rain")) {
         setWeather(rain);
+        setBgWeather(sky_sun);
       } else if (data_current.condition.text.includes("cloud")) {
         setWeather(cloud);
+        setBgWeather(sky_sun);
       } else {
-        setWeather(sunny);
+        setWeather(sunny_sky);
+        setBgWeather(sky_sun);
       }
+      
     } else {
-      setWeather(night);
+      setWeather(moon);
+      setBgWeather(night_sky);
+    }
+
+    if(document.getElementById('weather_div') != null) {
+      if(isDay) {
+        document.getElementById('weather_div').style.textShadow = "0px 0px 6px #797979";
+        document.querySelector('.weather_item').classList.add("weather_item_sun");
+        document.querySelector('.weather_content_left').classList.remove('text-white');
+      } else {
+        document.querySelectorAll('.weather_content_infor').forEach(item=>{
+          item.classList.add('text_color_white');
+        })
+      }
     }
     
     setLoading(false);
-  }, [loading]);
+  }, [loading, weather, background_weather, isDay]);
+
+  function handleChange(event) {
+    event.target.value = 0 ? setIsDay(true) : setIsDay(false)
+  }
 
   if (loading) {
     return <>
-      <div className="loading">
-        Loading...
+      <div className="d-flex justify-content-center align-items-center loading">
+          <div className="spinner-border" role="status">
+             <span className="sr-only">Loading...</span>
+        </div>
       </div>
     </>;
   } else {
     return (
       <>
-        <div className="container">
-          <h1>Weather Forecast</h1>
-          <div className="weather_info mt-2" style={{ height: "80vh" }}>
-            <div
-              className="top_item row mx-0"
-              style={{ height: "65%", overflow: "hidden" }}
-            >
-              <div className="col-lg-3  top_item__left p-0">
-                <img src={weather} width="100%" height="100%" />;
-              </div>
-              <div className="col-lg-9 px-0">
-                <div
-                  className="top_item__right-top mb-2 row align-items-center text-dark text-center"
-                  style={{ height: "50%"}}
-                >
-                  <div className="top_content col-lg-3">
-                    <div className="top_content_item">
-                      <img src={temp} />
+        <div className="container-fluid weather_section px-0" id="weather_div">
+        <select onChange={handleChange}>
+            <option value={0}>Day</option>
+            <option value={1}>Night</option>
+          </select>
+            <div className="weather_content">
+                <img src={background_weather} width="100%" height="100%" />
+                <div className="mx-auto weather_item">
+                    <div className="weather_content_left container text-white d-flex align-items-center justify-content-center">
+                        <div className="weather_location">
+                           <h1 className="weather_location_title">
+                             {location}
+                           </h1>
+                           <h3 className="local_time">
+                             {localTime}
+                           </h3>
+                           <h1 className="temp">
+                              {cels} <sup>o</sup> C
+                            </h1>
+                        </div>
                     </div>
-                    <p className="">
-                      Temperature : {cels}
-                      <sup>o</sup>C
-                    </p>
-                  </div>
-
-                  <div className="top_content col-lg-3">
+                    <div className="weather_content_right d-flex align-items-center">
+                        <img src={weather} width="100%"/>
+                    </div>
+                    <div className="weather_content_infor container">
+                      <div className="top_content_item">
+                        <img src={temp} width="100%" />
+                      </div>
+                      <p className="">
+                        Temperature : {cels}
+                        <sup>o</sup>C
+                      </p>
+                    </div>
+                    <div className="weather_content_infor container">
                     <div className="top_content_item">
-                      <img src={humidity} />
+                      <img src={humidity} width="100%"/>
                     </div>
                     <p className="">Humidity : {humid}</p>
-                  </div>
-
-                  <div className="top_content col-lg-3">
+                    </div>
+                    <div className="weather_content_infor container">
                     <div className="top_content_item">
-                      <img src={uvIndex} />
+                      <img src={uvIndex} width="100%"/>
                     </div>
                     <p className="">UV Index : {cels}</p>
-                  </div>
-
-                  <div className="top_content col-lg-3">
+                    </div>
+                    <div className="weather_content_infor container">
                     <div className="top_content_item">
-                      <img src={wID} />
+                      <img src={wID} width="100%"/>
                     </div>
                     <p className="">Wind : {wind} mph</p>
-                  </div>
+                    </div>
                 </div>
-
-                <div
-                  className="top_item__right-bottom bg-light"
-                  style={{ height: "50%" }}
-                ></div>
-              </div>
             </div>
-            <div
-              className="center_item pl-2 d-flex"
-              style={{ height: "5%", backgroundColor: "brown" }}
-            >
-              <span
-                className="font-weight-bold text-white border-right pr-4 d-flex align-items-center"
-                style={{ height: "100%" }}
-              >
-                Local time : {localTime} at {location}
-              </span>
-
-              <span
-                className="font-weight-bold text-white d-flex align-items-center px-4"
-                style={{ height: "100%" }}
-              >
-                Last update : {date}
-              </span>
-            </div>
-            <div
-              className="bottom_item"
-              style={{ height: "30%", backgroundColor: "paleturquoise" }}
-            ></div>
-          </div>
         </div>
       </>
     );
