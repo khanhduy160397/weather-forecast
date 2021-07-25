@@ -52,11 +52,11 @@
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr);
   background-color: rgb(40 40 51 / 88%);
-    width: 90%;
-    height: 100%;
+  /* width: 85%; */
+  /* height: 100vh; */
 }
 .weather_content_left {
-  height: 200px;
+  height: auto;
   width: 100%;
   grid-column: 1 / span 2;
 }
@@ -69,10 +69,13 @@
 }
 @media screen and (min-width:1366px) {
   .weather_content_left {
-    height: 400px;
+    height: 280px;
   }
   .weather_section {
-    width: 50% !important;
+    /* width: 50% !important; */
+  }
+  .weather_item {
+    width: unset;
   }
 }
 .weather_info {
@@ -85,14 +88,13 @@
   bottom: 0;
 }
 .weather_location_title {
-  font-size: 3rem;
+  font-size: 2rem;
 }
 .local_time {
-  margin-bottom: 2rem;
 }
 .temp {
   padding-top: 2rem;
-  font-size: 4rem;
+  font-size: 3rem;
 }
 
 .weather_item_sun {
@@ -122,6 +124,7 @@
   }
   .weather_item {
     height: unset !important;
+    width: 85% !important;
   }
 }
 .text_color_white {
